@@ -107,3 +107,36 @@ zipWith'::(a->b->c)->[a]->[b]->[c]
 zipWith' f [] _ = []
 zipWith' f _ [] = []
 zipWith' f (x:xs) (y:ys) = (f x y):(zipWith' f xs ys)
+
+foldl'::(z->x->z)->z->[x]->z
+foldl' f acc []=acc
+foldl' f acc (x:xs)=foldl' f (f acc x) xs
+
+flip'::(x->y->z)->y->x->z -- (x->y->z)->(y->x->z) is the same as (x->y->z)->y->x->z, so (flip f) is just an intermediate state in the curry chain which takes arguments in reverse order, but applies them correctly.
+flip' f y x=f x y
+
+foldr'::(z->x->z)->[x]->z->z -- Go in deep from the left, apply function while unwinding stack
+foldr' f [] acc = acc
+foldr' f (x:xs) acc =f (foldr' f xs acc) x
+
+revfoldr'''::[a]->[a]
+revfoldr''' xs = foldr' (\acc x -> (acc++[x])) xs []
+
+revfoldl'''::[a]->[a]
+revfoldl''' xs = foldl' (\acc x -> x:acc) [] xs
+
+revflip'''::[a]->[a]
+revflip''' xs = foldl' (flip(:)) [] xs
+
+person::String->Int->String->(String, Int, String)
+person name age country=(name, age, country)
+
+getName::(String,Int,String)->String
+getName (n,_,_)=n
+
+getAge::(String,Int,String)->String
+getAge (_,a,_)=show a
+
+getCountry::(String,Int,String)->String
+getCountry (_,_,c)=c
+
